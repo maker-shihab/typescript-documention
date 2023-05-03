@@ -736,4 +736,237 @@ console.log(s1.printDetails());
 }
 ```
 
-## 10. function signature
+## 10. Function signature
+
+- Example
+
+```js
+// function signature
+let userInfo1: () => void;
+let userInfo2: (name: string) => void;
+let userInfo3: (name: string) => string;
+
+userInfo1 = () => {
+  console.log("Anisul Islam is 32 years old");
+};
+userInfo2 = (name: string) => {
+  console.log(`${name} is 32 years old`);
+};
+
+userInfo3 = (name: string): string => {
+  return `${name} is 32 years old`;
+};
+
+userInfo1();
+userInfo2("Anisul Islam");
+console.log(userInfo3("Anisul Islam"));
+```
+
+## 11. Creating types from types
+
+### Generics Example -
+
+```js
+// make components reusable
+// make components flexible
+// C# and java have this generic feature
+// generic allows us to create own types
+
+const displayValue1 = (x) => {
+  return x;
+};
+// no auto suggestion for any type
+// displayValue1(20).;
+
+const displayValue2 = <T>(x: T): T => {
+  return x;
+};
+// now we will have auto suggestion
+// displayValue2(20).
+
+const addBefore = <T1>(numbers: T1[], x: T1) => {
+  return [x, ...numbers];
+};
+
+let numbers = [20, 30, 40];
+console.log(addBefore(numbers, 10));
+
+let countries = ["bangladesh", "pakistan", "India"];
+console.log(addBefore(countries, "Australia"));
+
+// Another example
+const printUserInfo = <X, Y>(userId: X, userAge: Y) => {
+  console.log(`ID : ${userId}, Age: ${userAge}`);
+};
+printUserInfo("101", 32);
+printUserInfo(101, 32);
+printUserInfo(101, "32");
+printUserInfo("101", "32");
+```
+
+### keyof type Example -
+
+### typeof type Example -
+
+```js
+let firstName: string;
+let lastName: typeof firstName;
+```
+
+### Conditional type Example -
+
+```js
+interface Animal {
+  live(): void;
+}
+interface Dog extends Animal {
+  woof(): void;
+}
+
+type Example1 = Dog extends Animal ? number : string;
+
+type Example1 = number
+
+type Example2 = RegExp extends Animal ? number : string;
+
+type Example2 = string
+```
+
+## 12. Narrowing
+
+### Type guards Example
+
+```js
+// type guards with typeof
+// typeof variable === string/number/boolean/symbol/undefined/object/function
+const printAllTodos = (todos: string[] | null) => {
+  if (typeof todos === "object") {
+    todos.map((todo) => console.log(todo));
+  } else {
+    console.log("todos are empty");
+  }
+};
+```
+
+### Truthiness narrowing Example
+
+```js
+// false -> 0,NaN,"" (the empty string), 0n (the bigint version of zero), null, undefined
+const printAllTodos = (todos: string[] | null) => {
+  if (todos) {
+    todos.map((todo) => console.log(todo));
+  } else {
+    console.log("todos are empty");
+  }
+};
+
+const todos1 = null;
+const todos2 = ["todo1", "todo2", "todo3"];
+printAllTodos(todos1);
+printAllTodos(todos2);
+```
+
+### Equality narrowing Example
+
+```js
+// == , ===, !=, !=== helps to narrow types
+```
+
+## 13. DOM Manipulation with typescript
+
+### Example 1
+
+```html
+<body>
+  <input type="number" class="input1" placeholder="Enter any number" />
+  <input type="number" class="input2" placeholder="Enter any number" />
+  <button>Add</button>
+  <p></p>
+  <script src="./index.js"></script>
+</body>
+```
+
+```js
+const number1 = document.querySelector(".input1") as HTMLInputElement;
+const number2 = document.querySelector(".input2") as HTMLInputElement;
+const addButton = document.querySelector("button")!;
+const result = document.querySelector("p")!;
+
+addButton?.addEventListener("click", () => {
+  const sum = Number(number1.value) + Number(number2.value);
+  result.textContent = `The result is ${sum}`;
+});
+```
+
+### Example2
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>welcome</h1>
+    <form class="user-form">
+      <div>
+        <label for="username">Username: </label>
+        <input type="text" id="username" />
+      </div>
+      <div>
+        <label for="useremail">email: </label>
+        <input type="email" id="useremail" />
+      </div>
+
+      <div>
+        <label for="country">Country: </label>
+        <select name="country" id="country">
+          <option value="bangladesh">bangladesh</option>
+          <option value="india">india</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="feedback">feedback: </label>
+        <textarea name="feedback" id="feedback" cols="30" rows="5"></textarea>
+      </div>
+      <button type="submit">save</button>
+    </form>
+    <script src="../dist/index.js"></script>
+  </body>
+</html>
+```
+
+```ts
+const form = document.querySelector(".user-form") as HTMLFormElement;
+console.log(form);
+
+const userNameInput = document.querySelector("#username") as HTMLInputElement;
+console.log(userNameInput);
+
+const userEmailInput = document.querySelector("#useremail") as HTMLInputElement;
+console.log(userEmailInput);
+
+const userCountrySelect = document.querySelector(
+  "#country"
+) as HTMLSelectElement;
+console.log(userCountrySelect);
+
+const userFeedback = document.querySelector("#feedback") as HTMLTextAreaElement;
+console.log(userFeedback);
+
+form.addEventListener("submit", (e: Event) => {
+  e.preventDefault();
+  let userData = {
+    userName: userNameInput.value,
+    userEmail: userEmailInput.value,
+    userCountry: userCountrySelect.value,
+    userFeedback: userFeedback.value,
+  };
+  console.log(userData);
+});
+```
